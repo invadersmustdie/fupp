@@ -1,0 +1,65 @@
+grammar Rpl
+  rule expression
+    exp:(assignment / operation / variable / primary / comment) expr_end <RplExpression>
+  end
+
+  rule assignment
+    var1:variable space assign_operator space var2:(operation / variable / primary)* <RplAssignment>
+  end
+
+  rule operation
+    var1:(variable / primary) space operator space var2:(variable / primary) <RplOperation>
+  end
+
+  rule operator
+    '-' / add_operator / '*' / '/' <RplOperator>
+  end
+
+  rule assign_operator
+    '='
+  end
+
+  rule add_operator
+    '+'
+  end
+
+  rule variable
+    variable_prefix identifier <RplVariable>
+  end
+
+  rule variable_prefix
+    '$'
+  end
+
+  rule identifier
+    [a-zA-Z0-9_]+
+  end
+
+  rule primary
+    (number / string)
+  end
+
+  rule string
+    '\'' [^\']+ '\'' <RplString>
+  end
+
+  rule number
+    ([0-9]+ / '0')+ <RplNumber>
+  end
+
+  rule comment
+    '#' (!newline .)*
+  end
+
+  rule newline
+    ("\r\n"+ / [\r\n]+)
+  end
+
+  rule space
+    [ \t]*
+  end
+
+  rule expr_end
+    ";"
+  end
+end
